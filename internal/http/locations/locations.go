@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"time"
 
 	"github.com/Taliker/Gokedex/internal/cache"
 )
@@ -22,7 +21,6 @@ func GetLocations(url string, cache *cache.Cache) (LocationResult, error) {
 		return locations, nil
 	} else {
 		//From API
-		time.Sleep(2000 * time.Millisecond)
 		res, err := http.Get(url)
 		if err != nil {
 			return LocationResult{}, err
