@@ -29,7 +29,10 @@ func StartREPL() {
 			continue
 		}
 
-		err := command.callback()
+		err := command.Callback()
+		if err != nil {
+			fmt.Println("An error occurred:", err)
+		}
 	}
 }
 
