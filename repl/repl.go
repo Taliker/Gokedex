@@ -12,6 +12,7 @@ import (
 func StartREPL() {
 	// Start the REPL
 	scanner := bufio.NewScanner(os.Stdin)
+	var config = commands.Config{}
 	for {
 		fmt.Print(">> ")
 		scanner.Scan()
@@ -29,7 +30,7 @@ func StartREPL() {
 			continue
 		}
 
-		err := command.Callback()
+		err := command.Callback(&config)
 		if err != nil {
 			fmt.Println("An error occurred:", err)
 		}

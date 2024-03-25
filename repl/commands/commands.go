@@ -4,7 +4,12 @@ package commands
 type Command struct {
 	Name        string
 	Description string
-	Callback    func() error
+	Callback    func(*Config) error
+}
+
+type Config struct {
+	nextURL string
+	prevURL string
 }
 
 func GetCommands() map[string]Command {
@@ -18,6 +23,16 @@ func GetCommands() map[string]Command {
 			Name:        "exit",
 			Description: "Exits the REPL",
 			Callback:    CommandExit,
+		},
+		"mapf": {
+			Name:        "mapf",
+			Description: "Prints the next locations in the Pokemon world",
+			Callback:    CommandMapF,
+		},
+		"mapb": {
+			Name:        "mapb",
+			Description: "Prints the previous locations in the Pokemon world",
+			Callback:    CommandMapB,
 		},
 	}
 }
