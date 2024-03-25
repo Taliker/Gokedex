@@ -4,10 +4,11 @@ import (
 	"errors"
 	"fmt"
 	locPac "github.com/Taliker/Gokedex/internal/http/locations"
+	"time"
 )
 
 const (
-	locationURL = "https://pokeapi.co/api/v2/location/"
+	locationURL = "https://pokeapi.co/api/v2/location/?limit=10"
 )
 
 func CommandMapF(config *Config) error {
@@ -37,5 +38,6 @@ func commandMap(url string, config *Config) error {
 func printLocations(locations []locPac.Location) {
 	for _, location := range locations {
 		fmt.Println(location.Name)
+		time.Sleep(200 * time.Millisecond)
 	}
 }
