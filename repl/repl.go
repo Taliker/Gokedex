@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	commands "github.com/Taliker/Gokedex/repl/commands"
 )
@@ -13,6 +14,8 @@ func StartREPL() {
 	// Start the REPL
 	scanner := bufio.NewScanner(os.Stdin)
 	var config = commands.Config{}
+	config.Cache = config.Cache.NewCache(5 * time.Minute)
+	fmt.Println("Welcome to the Pokedex!")
 	for {
 		fmt.Print(">> ")
 		scanner.Scan()
@@ -26,7 +29,7 @@ func StartREPL() {
 
 		command, exists := commands.GetCommands()[commandName]
 		if !exists {
-			fmt.Println("Command not found.")
+			fmt.Println("Command not found. Type 'help' for a list of commands.")
 			continue
 		}
 

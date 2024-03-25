@@ -1,5 +1,7 @@
 package commands
 
+import "github.com/Taliker/Gokedex/internal/cache"
+
 // Command is a struct that represents a command that can be executed in the REPL.
 type Command struct {
 	Name        string
@@ -10,6 +12,7 @@ type Command struct {
 type Config struct {
 	nextURL string
 	prevURL string
+	Cache   *cache.Cache
 }
 
 func GetCommands() map[string]Command {

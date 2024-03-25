@@ -21,17 +21,18 @@ func CommandMapF(config *Config) error {
 
 func CommandMapB(config *Config) error {
 	if config.prevURL == "" {
-		return errors.New("no previous locations, please use mapf first to get locations")
+		return errors.New("no previous locations, please use mapf to get locations")
 	} else {
 		return commandMap(config.prevURL, config)
 	}
 }
 
 func commandMap(url string, config *Config) error {
-	locations := locPac.GetLocations(url)
-	config.nextURL = locations.Next
-	config.prevURL = locations.Previous
-	printLocations(locations.Results)
+	if locations, err := locPac.GetLocations(url, config.Cache); err == nil {
+		config.nextURL = locations.Next
+		config.prevURL = locations.Previous
+		printLocations(locations.Results)
+	}
 	return nil
 }
 
