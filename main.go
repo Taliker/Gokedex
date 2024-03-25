@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Taliker/Gokedex/commands/repl"
+	"github.com/Taliker/Gokedex/repl"
 )
 
 func main() {
