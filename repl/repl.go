@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	commands "github.com/Taliker/Gokedex/repl/commands"
+	"github.com/Taliker/Gokedex/repl/commands"
 )
 
 func StartREPL(config *commands.Config) {

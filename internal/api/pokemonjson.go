@@ -1,6 +1,8 @@
 package api
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 func (p pokemonJSON) toPokemon() Pokemon {
 	var pokemon Pokemon

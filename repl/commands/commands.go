@@ -44,5 +44,11 @@ func GetCommands() map[string]Command {
 			Callback:    CommandExplore,
 			NeedsArg:    true,
 		},
+		"pokemon": {
+			Name:        "pokemon",
+			Description: "Get information about a Pokemon",
+			Callback:    CommandPokemon,
+			NeedsArg:    true,
+		},
 	}
 }
