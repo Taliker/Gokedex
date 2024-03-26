@@ -5,16 +5,13 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	"time"
 
 	commands "github.com/Taliker/Gokedex/repl/commands"
 )
 
-func StartREPL() {
+func StartREPL(config *commands.Config) {
 	// Start the REPL
 	scanner := bufio.NewScanner(os.Stdin)
-	var config = commands.Config{}
-	config.Cache = config.Cache.NewCache(5 * time.Minute)
 	fmt.Println("Welcome to the Pokedex!")
 	for {
 		fmt.Print(">> ")
@@ -33,7 +30,17 @@ func StartREPL() {
 			continue
 		}
 
-		err := command.Callback(&config)
+		var arg string
+		if command.NeedsArg && len(input) <= 1 {
+			fmt.Println("Please provide an argument for the command.")
+			continue
+		}
+
+		if command.NeedsArg {
+			arg = input[1]
+		}
+
+		err := command.Callback(config, arg)
 		if err != nil {
 			fmt.Println("An error occurred:", err)
 		}

@@ -1,13 +1,14 @@
 package cache
 
 import (
+	"fmt"
 	"sync"
 	"time"
 )
 
 type Cache struct {
 	entries map[string]CacheEntry
-	mu      *sync.RWMutex
+	mux     *sync.Mutex
 }
 
 type CacheEntry struct {
@@ -15,29 +16,30 @@ type CacheEntry struct {
 	val       []byte
 }
 
-func (cache *Cache) NewCache(interval time.Duration) *Cache {
+func (cache *Cache) NewCache(interval time.Duration) Cache {
 	newCache := Cache{
 		entries: make(map[string]CacheEntry),
-		mu:      &sync.RWMutex{},
+		mux:     &sync.Mutex{},
 	}
 	go cache.readLoop(interval)
-	return &newCache
+	return newCache
 }
 
 func (cache *Cache) Add(key string, val []byte) {
 	var entry CacheEntry = CacheEntry{createdAt: time.Now(),
 		val: val,
 	}
-	cache.mu.Lock()
-	defer cache.mu.Unlock()
+	cache.mux.Lock()
 
 	cache.entries[key] = entry
+	defer cache.mux.Unlock()
 }
 
 func (cache *Cache) Get(key string) ([]byte, bool) {
-	cache.mu.RLock()
-	defer cache.mu.RUnlock()
+	cache.mux.Lock()
+
 	entry, ok := cache.entries[key]
+	defer cache.mux.Unlock()
 	if !ok {
 		return nil, false
 	}
@@ -47,14 +49,18 @@ func (cache *Cache) Get(key string) ([]byte, bool) {
 func (cache *Cache) readLoop(interval time.Duration) {
 	for {
 		time.Sleep(interval)
-		cache.mu.RLock()
+		if len(cache.entries) == 0 {
+			continue
+		}
+		fmt.Printf("Cleaning cache, Lenght:%d", len(cache.entries))
+		cache.mux.Lock()
+		cache.mux.Lock()
 		for key, entry := range cache.entries {
 			if time.Since(entry.createdAt) > interval {
-				cache.mu.Lock()
 				delete(cache.entries, key)
-				cache.mu.Unlock()
 			}
 		}
-		cache.mu.RUnlock()
+		fmt.Printf("Cleaning cache, Lenght:%d", len(cache.entries))
+		cache.mux.Unlock()
 	}
 }

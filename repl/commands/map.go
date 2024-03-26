@@ -3,23 +3,19 @@ package commands
 import (
 	"errors"
 	"fmt"
-	locPac "github.com/Taliker/Gokedex/internal/http/locations"
+	"github.com/Taliker/Gokedex/internal/api"
 	"time"
 )
 
-const (
-	locationURL = "https://pokeapi.co/api/v2/location/?limit=10"
-)
-
-func CommandMapF(config *Config) error {
+func CommandMapF(config *Config, arg string) error {
 	if config.nextURL == "" {
-		return commandMap(locationURL, config)
+		return commandMap("", config)
 	} else {
 		return commandMap(config.nextURL, config)
 	}
 }
 
-func CommandMapB(config *Config) error {
+func CommandMapB(config *Config, arg string) error {
 	if config.prevURL == "" {
 		return errors.New("no previous locations, please use mapf to get locations")
 	} else {
@@ -28,7 +24,7 @@ func CommandMapB(config *Config) error {
 }
 
 func commandMap(url string, config *Config) error {
-	if locations, err := locPac.GetLocations(url, config.Cache); err == nil {
+	if locations, err := api.GetLocations(url, &config.Cache); err == nil {
 		config.nextURL = locations.Next
 		config.prevURL = locations.Previous
 		printLocations(locations.Results)
@@ -36,9 +32,9 @@ func commandMap(url string, config *Config) error {
 	return nil
 }
 
-func printLocations(locations []locPac.Location) {
+func printLocations(locations []api.Location) {
 	for _, location := range locations {
 		fmt.Println(location.Name)
-		time.Sleep(200 * time.Millisecond)
+		time.Sleep(100 * time.Millisecond)
 	}
 }

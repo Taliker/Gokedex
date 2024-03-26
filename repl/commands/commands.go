@@ -6,13 +6,14 @@ import "github.com/Taliker/Gokedex/internal/cache"
 type Command struct {
 	Name        string
 	Description string
-	Callback    func(*Config) error
+	Callback    func(*Config, string) error
+	NeedsArg    bool
 }
 
 type Config struct {
 	nextURL string
 	prevURL string
-	Cache   *cache.Cache
+	Cache   cache.Cache
 }
 
 func GetCommands() map[string]Command {
@@ -36,6 +37,12 @@ func GetCommands() map[string]Command {
 			Name:        "mapb",
 			Description: "Prints the previous locations in the Pokemon world",
 			Callback:    CommandMapB,
+		},
+		"explore": {
+			Name:        "explore",
+			Description: "Explore a location in the Pokemon world",
+			Callback:    CommandExplore,
+			NeedsArg:    true,
 		},
 	}
 }
