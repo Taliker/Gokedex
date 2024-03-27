@@ -14,12 +14,11 @@ const (
 
 func GetPokemon(pokemonName string, cache *cache.Cache) (Pokemon, error) {
 	if pokemonName == "" {
-		return Pokemon{}, errors.New("please enter the name of the area you want to explore")
+		return Pokemon{}, errors.New("please enter the name of a pokemon")
 	}
 	url := pokemonURL + pokemonName
 	if val, ok := cache.Get(url); ok {
 		//From cache
-		fmt.Println("Cache")
 		var pokemon Pokemon
 		pokemon, err := PokemonDataFromJSON(val)
 		if err != nil {
@@ -50,4 +49,16 @@ func GetPokemon(pokemonName string, cache *cache.Cache) (Pokemon, error) {
 		}
 		return pokemon, nil
 	}
+}
+
+func (pok Pokemon) getCatchRate() int {
+	return (pok.BaseExperience / 20)
+}
+
+func GetCatchRate(pokName string, cache *cache.Cache) (int, error) {
+	pokemon, err := GetPokemon(pokName, cache)
+	if err != nil {
+		return 0, err
+	}
+	return pokemon.getCatchRate(), nil
 }

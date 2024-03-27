@@ -20,7 +20,6 @@ func GetLocation(areaName string, cache *cache.Cache) (LocationArea, error) {
 	url := locationURL + areaName
 	if val, ok := cache.Get(url); ok {
 		//From cache
-		fmt.Println("Cache")
 		var location LocationArea
 		location, err := LocationAreaDataToLocationArea(val)
 		if err != nil {
